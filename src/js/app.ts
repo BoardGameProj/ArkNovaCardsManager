@@ -482,7 +482,7 @@ function _init(): void {
             }
             elContentAnimalCards.innerHTML = animalCardsMarkup;
         } else if ((dataFilters?.category as Array<String>)?.includes(`animal`)) {
-            elContentAnimalCards.innerHTML = _displayMessage(`No animals matched`);
+            elContentAnimalCards.innerHTML = _displayMessage(`没有匹配动物`);
         }
 
         if (dataSponsors?.length) {
@@ -491,7 +491,7 @@ function _init(): void {
             }
             elContentSponsorCards.innerHTML = sponsorCardsMarkup;
         } else if ((dataFilters?.category as Array<String>)?.includes(`sponsor`)) {
-            elContentSponsorCards.innerHTML = _displayMessage(`No sponsors matched`);
+            elContentSponsorCards.innerHTML = _displayMessage(`没有匹配赞助商`);
         }
     }
 

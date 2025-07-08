@@ -80,7 +80,7 @@ $dialog_marine-ext-background-color--hover: var(--bg-dark);
                 position: relative;
 
                 &::after {
-                    content: 'Marine extension';
+                    content: '海洋世界扩展';
                     position: absolute;
                     top: 0.2rem;
                     right: 0.2rem;
@@ -115,7 +115,7 @@ $dialog_marine-ext-background-color--hover: var(--bg-dark);
             align-items: flex-start;
 
             &::before {
-                content: attr(data-value);
+                content: attr(data-value-name);
                 display: block;
                 font-size: $dialog_action-size--title;
                 font-weight: $dialog_action-weight--title;

@@ -87,13 +87,16 @@ $.gulp.task('compileTs', () => {
 $.gulp.task('optimizeImages', () => {
     return $.gulp.src('src/images/**/*.{png,gif,jpg,webp,svg}')
     .pipe($.plumber())
-    .pipe($.imagemin({
+    .pipe($.imagemin([
+        // 只保留能正常工作的插件
+        $.imagemin.gifsicle(),
+        $.imagemin.svgo()
+    ], {
         verbose: true
     }))
     .pipe($.gulp.dest('./dist/images/'))
     .pipe($.browserSync.stream({match: '**/*.{png,gif,jpg,webp,svg}'}))
 });
-
 
 $.gulp.task('optimizeSVG', () => {
     return $.gulp.src('src/images/**/*.svg')

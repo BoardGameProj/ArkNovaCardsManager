@@ -268,7 +268,7 @@ interface IDataFilters {
             area_2: isDefault ? 28 : 0,
             area_3: isDefault ? 33 : 0,
             area_4: isDefault ? 28 : 0,
-            area_5: isDefault ? 23 : 0,
+            area_5: isDefault ? 33 : 0,
             size_1: isDefault ? 33 : 0,
             size_2: isDefault ? 38 : 0,
             size_3: isDefault ? 33 : 0,
@@ -318,49 +318,69 @@ interface IDataFilters {
             return dataCards;
         }
 
-        if (dataFilters.category.includes('animal')) {
-            dataCards.animals = animalData.filter(animal => {
-                for (let filter in dataFilters) {
-                    if (filter === 'extension') continue;
-                    if (dataFilters.hasOwnProperty(filter)) {
-                        if (Array.isArray(dataFilters[filter])) {
-                            if (filter === 'type') {
-                                if (Array.isArray(animal[filter])) {
-                                    for (let i = 0; i < (animal[filter] as Array<Number>).length; i++) {
-                                        if (dataFilters[filter].includes((animal[filter] as Array<Number>)[i])) {
-                                            return true;
-                                        }
-                                    }
-                                    return false;
-                                }
-                            }
-                            if (filter === 'action') {
-                                if (animal[filter].indexOf(`|`) !== -1) {
-                                    const actions = animal[filter].split(`|`).map(item => item.trim());
-
-                                    if (actions.includes(dataFilters[filter].toString())) {
-                                        return true;
-                                    }
-                                }
-                            }
-                            if (filter === 'conservation' || filter === 'reputation') {
-                                if (animal[filter] >= 1) {
-                                    return true;
-                                }
-                            }
-                            if (!dataFilters[filter].includes((animal as any)[filter])) {
-                                return false;
-                            }
-                        } else {
-                            if (dataFilters[filter] !== (animal as any)[filter]) {
-                                return false;
-                            }
-                        }
-                    }
+if (dataFilters.category.includes('animal')) {
+    dataCards.animals = animalData.filter(animal => {
+        // Check all filters except 'extension'
+        for (let filter in dataFilters) {
+            if (filter === 'extension') continue;
+            if (!dataFilters.hasOwnProperty(filter)) continue;
+            
+            const filterValue = dataFilters[filter];
+            const animalValue = (animal as any)[filter];
+            
+            // Skip if filter value is empty or undefined
+            if (filterValue === undefined || filterValue === null || 
+                (Array.isArray(filterValue) && filterValue.length === 0)) {
+                continue;
+            }
+            
+            // Special handling for 'type' filter
+            if (filter === 'type') {
+                if (Array.isArray(animalValue)) {
+                    // For array type, check if any of the animal's types match the filter
+                    const matches = animalValue.some(type => 
+                        Array.isArray(filterValue) ? filterValue.includes(type) : filterValue === type
+                    );
+                    if (!matches) return false;
+                } else {
+                    // For single type, check if it matches the filter
+                    const matches = Array.isArray(filterValue) 
+                        ? filterValue.includes(animalValue)
+                        : filterValue === animalValue;
+                    if (!matches) return false;
                 }
-                return true;
-            }).sort(_sortByValue(config.cardsSortBy));
+            } 
+            // Special handling for 'action' filter
+            else if (filter === 'action') {
+                if (animal[filter].indexOf('|') !== -1) {
+                    const actions = animal[filter].split('|').map(item => item.trim());
+                    if (!actions.includes(filterValue.toString())) {
+                        return false;
+                    }
+                } else if (animalValue !== filterValue.toString()) {
+                    return false;
+                }
+            } 
+            // Special handling for 'conservation' and 'reputation' filters
+            else if (filter === 'conservation' || filter === 'reputation') {
+                if (animalValue < 1) {
+                    return false;
+                }
+            } 
+            // Default handling for other filters
+            else {
+                if (Array.isArray(filterValue)) {
+                    if (!filterValue.includes(animalValue)) {
+                        return false;
+                    }
+                } else if (animalValue !== filterValue) {
+                    return false;
+                }
+            }
         }
+        return true;
+    }).sort(_sortByValue(config.cardsSortBy));
+}
 
         if (dataFilters.category.includes('sponsor')) {
             if (Object.keys(dataFilters)?.length === 1 || (Object.keys(dataFilters).includes(`category`) && Object.keys(dataFilters).includes(`extension`) && Object.keys(dataFilters)?.length === 2)) {

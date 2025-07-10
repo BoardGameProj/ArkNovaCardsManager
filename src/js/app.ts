@@ -16,7 +16,7 @@ interface IDataFilters {
     [key: string]: Array<string> | number;
 }
 
-(function() {
+(function () {
     const elFormFilters: HTMLFormElement = document.querySelector(`.filter`);
     const elFormTopbar: HTMLFormElement = document.querySelector(`.topbar__form`);
     const elContentAnimalCards: HTMLDivElement = document.querySelector(`.content__animals`);
@@ -32,13 +32,14 @@ interface IDataFilters {
     }
 
     let dataFilters: IDataFilters = {
-        category: [`animal`, `sponsor`]
+        category: [`animal`, `sponsor`],
+        extension: [`marineext`],
     };
     let dataCards: IDataCards = _setCardsDefault();
     let dataStats: IDataStats = _setStats();
     let offcanvasID: HTMLDialogElement = undefined;
-    
-function _init(): void {
+
+    function _init(): void {
         _registerEvents();
         _registerSchemeUI();
         _checkURLSearchParams();
@@ -49,16 +50,16 @@ function _init(): void {
     function _checkURLSearchParams() {
         const queryString: string = window.location.search;
         const urlParams: URLSearchParams = new URLSearchParams(queryString);
-        
+
         if (urlParams.has('id')) {
             const filtersID: string = urlParams.get('id')!;
             const arrayID: number[] = filtersID.split(',').map(Number);
-        
+
             arrayID.forEach((id: number) => {
                 if (isNaN(id)) return;
 
                 const checkboxes: NodeListOf<HTMLInputElement> = document.querySelectorAll('.filter__checkbox');
-        
+
                 checkboxes.forEach((checkbox: HTMLInputElement) => {
                     const dataId: string | null = checkbox.getAttribute('data-id');
                     if (dataId && parseInt(dataId) === id) {
@@ -99,7 +100,7 @@ function _init(): void {
     }
 
     function _resetMarineWorld() {
-        (document.querySelector(`#marineExt`) as HTMLInputElement).checked = false;
+        (document.querySelector(`#marineExt`) as HTMLInputElement).checked = true;
     }
 
     function _resetSort() {
@@ -115,7 +116,7 @@ function _init(): void {
 
         (document.querySelector(`.button--cards`) as HTMLButtonElement)?.addEventListener(`click`, (ev: Event) => {
             ev.preventDefault();
-            
+
             localStorage.setItem(config.cardsOnStorage, JSON.stringify([]));
             localStorage.setItem(config.cardsOffStorage, JSON.stringify([]));
 
@@ -123,8 +124,11 @@ function _init(): void {
         });
 
         (document.querySelector(`.button--filter`) as HTMLButtonElement)?.addEventListener(`click`, () => {
-            dataFilters = {};
-            
+            dataFilters = {
+                category: ["animal", "sponsor"],
+                extension: ["marineext"]  // 确保包含 marineext
+            };
+
             _resetMarineWorld();
             _resetAction();
             _resetSort();
@@ -180,21 +184,21 @@ function _init(): void {
                     const modalType = ((ev.currentTarget as HTMLElement).closest(`.dialog`) as HTMLDialogElement).dataset.modal;
                     const modalInput: HTMLInputElement = document.querySelector(`#${modalType}`);
                     modalInput.value = (ev.currentTarget as HTMLInputElement).dataset.value;
-    
+
                     if (modalInput.name === `sort`) {
                         config.cardsSortBy = modalInput.value.toLowerCase().trim().replace(/\s/g, '');
-    
+
                         if (config.cardsSortBy === 'conservation') {
                             config.cardsSortBy = `${config.cardsSortBy}-desc`;
                         }
-                        
+
                         if (config.cardsSortBy === 'reputation') {
                             config.cardsSortBy = `${config.cardsSortBy}-desc`;
                         }
                     }
-    
+
                     _updateCards();
-    
+
                     document.body.classList.remove(`_no-scroll`);
                     offcanvasID.close();
                 }
@@ -240,7 +244,7 @@ function _init(): void {
                         card.classList.remove(config.cardsOffClass);
                     }
                 });
-                    
+
             }
         });
     }
@@ -251,31 +255,31 @@ function _init(): void {
 
     function _setStats(isDefault: boolean = true): Object {
         return {
-            animal: isDefault ? 128 : 0,
-            sponsor: isDefault ? 64 : 0,
-            marineWorld: 0,
-            type_1: isDefault ? 30 : 0, 
-            type_2: isDefault ? 30 : 0,
-            type_3: isDefault ? 29 : 0,
-            type_4: isDefault ? 29 : 0,
-            type_5: isDefault ? 23 : 0,
-            type_6: 0,
-            area_1: isDefault ? 27 : 0,
-            area_2: isDefault ? 21 : 0,
-            area_3: isDefault ? 27 : 0,
-            area_4: isDefault ? 21 : 0,
-            area_5: isDefault ? 27 : 0,
-            size_1: isDefault ? 24 : 0,
-            size_2: isDefault ? 31 : 0,
-            size_3: isDefault ? 24 : 0,
-            size_4: isDefault ? 20 : 0,
-            size_5: isDefault ? 19 : 0,
-            aviary: isDefault ? 11 : 0,
-            small: isDefault ? 10 : 0,
+            animal: isDefault ? 160 : 0,
+            sponsor: isDefault ? 80 : 0,
+            marineWorld: isDefault ? 48 : 0,
+            type_1: isDefault ? 32 : 0,
+            type_2: isDefault ? 31 : 0,
+            type_3: isDefault ? 33 : 0,
+            type_4: isDefault ? 31 : 0,
+            type_5: isDefault ? 26 : 0,
+            type_6: isDefault ? 28 : 0,
+            area_1: isDefault ? 33 : 0,
+            area_2: isDefault ? 28 : 0,
+            area_3: isDefault ? 33 : 0,
+            area_4: isDefault ? 28 : 0,
+            area_5: isDefault ? 23 : 0,
+            size_1: isDefault ? 33 : 0,
+            size_2: isDefault ? 38 : 0,
+            size_3: isDefault ? 33 : 0,
+            size_4: isDefault ? 24 : 0,
+            size_5: isDefault ? 21 : 0,
+            aviary: isDefault ? 12 : 0,
+            small: isDefault ? 11 : 0,
             terrarium: isDefault ? 25 : 0,
-            aquarium: 0,
-            rock: isDefault ? 25 : 0,
-            water: isDefault ? 29 : 0,
+            aquarium: isDefault ? 26 : 0,
+            rock: isDefault ? 36 : 0,
+            water: isDefault ? 32 : 0,
             action: isDefault ? '' : '',
         }
     }
@@ -313,7 +317,7 @@ function _init(): void {
             elContentAnimalCards.innerHTML = _displayMessage(`Select at least one card type: <strong>Animals</strong> | <strong>Sponsors</strong>`);
             return dataCards;
         }
-        
+
         if (dataFilters.category.includes('animal')) {
             dataCards.animals = animalData.filter(animal => {
                 for (let filter in dataFilters) {
@@ -386,7 +390,7 @@ function _init(): void {
                 dataCards.sponsors;
             }
         }
-        
+
         return dataCards;
     }
 
@@ -434,7 +438,7 @@ function _init(): void {
                 if (item[0][`marineExt`]) dataStats[`marineWorld`]++;
                 if (item[0][`type`] != 0) dataStats[`type_${item[0][`type`]}`]++;
                 if (item[0][`area`] != 0) dataStats[`area_${item[0][`area`]}`]++;
-                
+
                 item[0][`isRock`] ? dataStats[`rock`]++ : '';
                 item[0][`isWater`] ? dataStats[`water`]++ : '';
             });
@@ -444,7 +448,7 @@ function _init(): void {
     function _sortByValue(sortBy: string | number = `id-desc`) {
         const sortValue = sortBy.toString().split('-');
 
-        return function(a: any, b: any): number {
+        return function (a: any, b: any): number {
             if (a[sortValue[0]] === b[sortValue[0]]) return 0;
             if (sortValue[1] && sortValue[1] === `desc`) {
                 return (a[sortValue[0]] > b[sortValue[0]]) ? -1 : 1;
@@ -472,7 +476,7 @@ function _init(): void {
         });
     }
 
-    function _displayCards(dataAnimals: Array<Number>, dataSponsors: Array<Number>): void {  
+    function _displayCards(dataAnimals: Array<Number>, dataSponsors: Array<Number>): void {
         let animalCardsMarkup: string = '';
         let sponsorCardsMarkup: string = '';
 
@@ -501,7 +505,7 @@ function _init(): void {
 
     function _updateCards(): void {
         dataFilters = {};
-    
+
         _promise().then(() => {
             const filtersData: FormData = new FormData(elFormFilters);
 
@@ -512,7 +516,7 @@ function _init(): void {
                 if (dataFilters.hasOwnProperty(key)) {
                     (dataFilters as any)[key].push(objValue);
                 } else {
-                    Object.assign(dataFilters, {[key]: [objValue]});
+                    Object.assign(dataFilters, { [key]: [objValue] });
                 }
             }
 
@@ -527,11 +531,11 @@ function _init(): void {
                 } else {
                     objValue = +value;
                 }
-                
+
                 if (dataFilters.hasOwnProperty(key)) {
                     (dataFilters as any)[key].push(objValue);
                 } else {
-                    Object.assign(dataFilters, {[key]: [objValue]});
+                    Object.assign(dataFilters, { [key]: [objValue] });
                 }
             }
 
@@ -547,7 +551,7 @@ function _init(): void {
         elContentSponsorCards.innerHTML = '';
     }
 
-    function _card(id: number): string {       
+    function _card(id: number): string {
         let cardStatus = '';
         let cardType = '';
 
@@ -585,7 +589,7 @@ function _init(): void {
 
     function _removeValueFromStorage(key: string, id: number): void {
         const values = JSON.parse(localStorage.getItem(key)) || [];
-        
+
         if (values.includes(id)) {
             values.splice(values.indexOf(id), 1);
             localStorage.setItem(key, JSON.stringify(values));

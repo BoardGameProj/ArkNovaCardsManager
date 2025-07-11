@@ -66,9 +66,8 @@ $filter-tooltip-weight: 600;
         position: absolute;
         text-align: center;
         text-transform: uppercase;
-        top: 50%;
-        transform: rotate(90deg) translateX(-50%);
-        transform-origin: 0 0;
+        top: 42%;
+        left: -8%;
     }
 
     &__item {

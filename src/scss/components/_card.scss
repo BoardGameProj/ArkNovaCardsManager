@@ -14,6 +14,7 @@ $card_icon-size: 3rem;
 $card_id-background--animal: var(--card-animal);
 $card_id-background--sponsor: var(--card-sponsor);
 $card_id-color: var(--text-dark);
+$card_name-color: var(--text-light);
 $card_id-weight: 600;
 $card-id-size: 1.3rem;
 
@@ -39,6 +40,12 @@ $card-id-size: 1.3rem;
             background-color: $card_id-background--animal;
             bottom: 34%;
         }
+
+        #{$root}__name {
+            background-color: $card_id-background--animal;
+            color: $card_name-color;
+            bottom: 34%;
+        }
     }
 
     &--sponsor {
@@ -46,10 +53,17 @@ $card-id-size: 1.3rem;
 
         #{$root}__id {
             background-color: $card_id-background--sponsor;
-            bottom: 38%;
+            bottom: 38.6%;
+            font-size: 1.0rem;
+        }
+
+        #{$root}__name {
+            background-color: $card_id-background--sponsor;
+            bottom: 38.6%;
+            font-size: 1.0rem;
         }
     }
-    
+
     @media (hover: hover) and (pointer: fine) {
         &:hover {
             transform: scale(1.05);
@@ -82,7 +96,7 @@ $card-id-size: 1.3rem;
     &--on,
     &--off {
         position: relative;
-        
+
         &::after {
             background-position: center center;
             background-repeat: no-repeat;
@@ -104,10 +118,10 @@ $card-id-size: 1.3rem;
 
     &--on {
         border-color: $card_border--on;
-        
+
         &::after {
             background-color: $card_border--on;
-            background-image:  url('./images/icons/#{$card_icon-on}.svg');
+            background-image: url('./images/icons/#{$card_icon-on}.svg');
             content: '';
         }
 
@@ -122,10 +136,10 @@ $card-id-size: 1.3rem;
 
     &--off {
         border-color: $card_border--off;
-        
+
         &::after {
             background-color: $card_border--off;
-            background-image:  url('./images/icons/#{$card_icon-off}.svg');
+            background-image: url('./images/icons/#{$card_icon-off}.svg');
             content: '';
         }
 
@@ -146,5 +160,18 @@ $card-id-size: 1.3rem;
         padding: 0.3rem 0.5rem;
         position: absolute;
         right: 0;
+    }
+
+    &__name {
+        color: $card_id-color;
+        display: flex;
+        font-size: $card-id-size;
+        font-weight: $card_id-weight;
+        padding: 0.3rem 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        width: 100%;
+        justify-content: center;
     }
 }

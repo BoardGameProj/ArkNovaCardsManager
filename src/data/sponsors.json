@@ -694,7 +694,7 @@
             "category": "sponsor",
             "marineExt": false,
             "name": "Sea turtle tank",
-            "type": 4,
+            "type": [4, 6],
             "area": 0,
             "isPet": 0,
             "isBear": 0,
